@@ -1,25 +1,12 @@
 from django.db import models
 
 
-class BaseRepositoryBuilder:
-    model: models.Model = None
-    query: models.QuerySet = None
-
-    def __init__(self, model):
-        self.model = model
-        self.query = model.objects
-
-    def execute(self):
-        return self.query
-
-
 class BaseRepository:
     model: models.Model = None
-    builder = BaseRepositoryBuilder
 
     @classmethod
-    def build(cls):
-        return cls.builder(cls.model)
+    def get_queryset(cls):
+        return cls.model.objects
 
     @classmethod
     def find_one_or_none(cls, *args, **kwargs):
