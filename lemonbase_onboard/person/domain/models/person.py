@@ -4,7 +4,10 @@ from django.contrib.auth.models import AbstractUser
 
 class Person(AbstractUser):
     id = models.AutoField(primary_key=True)
-    username = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
+    email = models.EmailField(unique=True)
     name = models.CharField(max_length=128)
     registered_at = models.DateTimeField(auto_now_add=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
