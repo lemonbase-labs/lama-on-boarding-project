@@ -12,3 +12,8 @@ class Reviewee(models.Model):
     person = models.ForeignKey(
         "person.Person", related_name="reviewees", on_delete=models.DO_NOTHING
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["entity_id"]),
+        ]

@@ -13,3 +13,8 @@ class Person(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["entity_id"]),
+        ]

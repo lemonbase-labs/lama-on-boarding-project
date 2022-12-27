@@ -17,3 +17,8 @@ class ReviewCycle(models.Model):
         Question,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["entity_id"]),
+        ]
