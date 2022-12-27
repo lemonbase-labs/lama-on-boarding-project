@@ -9,7 +9,7 @@ class Person(AbstractUser):
     entity_id = models.UUIDField(default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=128)
-    registered_at = models.DateTimeField(auto_now_add=True)
+    registered_at = models.DateTimeField(auto_now_add=True, editable=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
