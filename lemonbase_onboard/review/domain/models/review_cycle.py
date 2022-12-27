@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from person.models import Person
@@ -6,7 +8,7 @@ from review.domain.models.question import Question
 
 class ReviewCycle(models.Model):
     id = models.AutoField(primary_key=True)
-    review_cycle_creator = models.ForeignKey(
+    entity_id = models.UUIDField(default=uuid.uuid4, editable=False)
     creator = models.ForeignKey(
         Person, related_name="review_cycles", on_delete=models.DO_NOTHING
     )
