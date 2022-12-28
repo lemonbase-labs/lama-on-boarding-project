@@ -16,7 +16,7 @@ class ReviewCycleAppService:
     @classmethod
     def _review_cycle_to_dto(cls, review_cycle: ReviewCycle) -> ReviewCycleDTO:
         return ReviewCycleDTO(
-            id=review_cycle.id,
+            entity_id=review_cycle.entity_id,
             name=review_cycle.name,
             person=BasicPersonDTO(
                 email=review_cycle.person.email,

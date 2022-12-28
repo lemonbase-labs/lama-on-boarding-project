@@ -7,7 +7,7 @@ from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
 
 
 class ReviewCycleDTO(BaseModel):
-    id: int
+    entity_id: str
     person: BasicPersonDTO
     name: str
     question: ReviewCycleQuestionDTO
