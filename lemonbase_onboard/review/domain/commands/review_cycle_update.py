@@ -8,7 +8,7 @@ from review.domain.commands.review_cycle_update_question import (
 
 
 class ReviewCycleUpdateCommand(BaseModel):
-    review_cycle_id: int
+    review_cycle_entity_id: int
     request_user_id: int
     name: str
     reviewee_ids: List[int]

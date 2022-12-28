@@ -22,7 +22,7 @@ class ReviewCycleViewSet(viewsets.ViewSet):
     def update(self, request, pk=None):
         review_update_request = ReviewCycleUpdateRequest(**request.data)
         review_cycle = ReviewCycleAppService.update_review_cycle(
-            review_cycle_id=pk,
+            review_cycle_entity_id=pk,
             update_review_request=review_update_request,
             request_user_id=request.user.id,
         )
@@ -30,5 +30,7 @@ class ReviewCycleViewSet(viewsets.ViewSet):
         return Response(review_cycle.dict())
 
     def delete(self, request, pk=None):
-        review_delete_reqeust = ReviewCycleDeleteRequest(review_cycle_id=pk)
-        ReviewCycleAppService.delete_review_cycle(review_delete_reqeust, request_user_id=request.user.id)
+        review_delete_reqeust = ReviewCycleDeleteRequest(review_cycle_entity_id=pk)
+        ReviewCycleAppService.delete_review_cycle(
+            review_delete_reqeust, request_user_id=request.user.id
+        )

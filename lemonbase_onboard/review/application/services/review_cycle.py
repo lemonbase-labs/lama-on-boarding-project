@@ -52,20 +52,31 @@ class ReviewCycleAppService:
         return cls._review_cycle_to_dto(review_cycle)
 
     @classmethod
-    def update_review_cycle(cls, review_cycle_id: int, update_review_request: ReviewCycleUpdateRequest, request_user_id: int):
+    def update_review_cycle(
+        cls,
+        review_cycle_entity_id: int,
+        update_review_request: ReviewCycleUpdateRequest,
+        request_user_id: int,
+    ):
         review_cycle_create_command = ReviewCycleUpdateCommand(
-            review_cycle_id=review_cycle_id,
+            review_cycle_entity_id=review_cycle_entity_id,
             request_user_id=request_user_id,
             **update_review_request.dict(),
         )
-        review_cycle = ReviewCycleDomainService.update_review_cycle(review_cycle_create_command)
+        review_cycle = ReviewCycleDomainService.update_review_cycle(
+            review_cycle_create_command
+        )
 
         return cls._review_cycle_to_dto(review_cycle)
 
     @classmethod
-    def delete_review_cycle(cls, delete_review_request: ReviewCycleDeleteRequest, request_user_id: int) -> None:
-        review_cycle: ReviewCycle = ReviewCycleRepository.find_one(id=delete_review_request.review_cycle_id)
-        if review_cycle.review_cycle_creator.id != delete_review_request.review_cycle_id:
+    def delete_review_cycle(
+        cls, delete_review_request: ReviewCycleDeleteRequest, request_user_id: int
+    ) -> None:
+        review_cycle: ReviewCycle = ReviewCycleRepository.find_one(
+            entity_id=delete_review_request.review_cycle_entity_id
+        )
+        if review_cycle.review_cycle_creator.id != request_user_id:
             raise Unauthorized("리뷰 사이클 생성자만 삭제가 가능합니다")
 
         review_cycle.delete()
