@@ -19,7 +19,7 @@ class ReviewCycleAppService:
             id=review_cycle.id,
             name=review_cycle.name,
             person=BasicPersonDTO(
-                username=review_cycle.person.username,
+                email=review_cycle.person.email,
                 name=review_cycle.person.name,
                 registered_at=review_cycle.person.registered_at,
             ),
@@ -29,7 +29,7 @@ class ReviewCycleAppService:
             ),
             reviewee=[
                 BasicPersonDTO(
-                    username=reviewee.person.username,
+                    email=reviewee.person.email,
                     name=reviewee.person.name,
                     registered_at=reviewee.person.registered_at,
                 )
