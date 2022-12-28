@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -34,3 +34,5 @@ class ReviewCycleViewSet(viewsets.ViewSet):
         ReviewCycleAppService.delete_review_cycle(
             review_delete_reqeust, request_user_id=request.user.id
         )
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
