@@ -22,7 +22,7 @@ class PersonAuthViewSet(viewsets.ViewSet):
 
         user = authenticate(
             request=request,
-            username=person_login_request.username,
+            email=person_login_request.email,
             password=person_login_request.password,
         )
 

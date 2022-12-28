@@ -4,6 +4,6 @@ from pydantic import BaseModel
 
 
 class BasicPersonDTO(BaseModel):
-    username: str
+    email: str
     name: str
     registered_at: datetime

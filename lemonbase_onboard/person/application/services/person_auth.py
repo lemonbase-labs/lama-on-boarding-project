@@ -10,7 +10,7 @@ class PersonAuthAppService:
     @classmethod
     def register(cls, person_register_request: PersonRegisterRequest) -> BasicPersonDTO:
         person_register_command = PersonRegisterCommand(
-            username=person_register_request.username,
+            email=person_register_request.email,
             password=make_password(person_register_request.password),
             name=person_register_request.name,
         )
