@@ -16,12 +16,12 @@ class ReviewCycleAppService:
     @classmethod
     def _review_cycle_to_dto(cls, review_cycle: ReviewCycle) -> ReviewCycleDTO:
         return ReviewCycleDTO(
-            entity_id=review_cycle.entity_id,
+            entity_id=str(review_cycle.entity_id),
             name=review_cycle.name,
             person=BasicPersonDTO(
-                email=review_cycle.person.email,
-                name=review_cycle.person.name,
-                registered_at=review_cycle.person.registered_at,
+                email=review_cycle.creator.email,
+                name=review_cycle.creator.name,
+                registered_at=review_cycle.creator.registered_at,
             ),
             question=ReviewCycleQuestionDTO(
                 title=review_cycle.question.title,
@@ -54,7 +54,7 @@ class ReviewCycleAppService:
     @classmethod
     def update_review_cycle(
         cls,
-        review_cycle_entity_id: int,
+        review_cycle_entity_id: str,
         update_review_request: ReviewCycleUpdateRequest,
         request_user_id: int,
     ):
@@ -76,7 +76,7 @@ class ReviewCycleAppService:
         review_cycle: ReviewCycle = ReviewCycleRepository.find_one(
             entity_id=delete_review_request.review_cycle_entity_id
         )
-        if review_cycle.review_cycle_creator.id != request_user_id:
+        if review_cycle.creator.id != request_user_id:
             raise Unauthorized("리뷰 사이클 생성자만 삭제가 가능합니다")
 
         review_cycle.delete()
