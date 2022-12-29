@@ -1,0 +1,2 @@
+class ObjectNotExactCountError(Exception):
+    pass

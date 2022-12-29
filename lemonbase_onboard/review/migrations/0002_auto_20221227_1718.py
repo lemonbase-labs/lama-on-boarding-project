@@ -6,20 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('review', '0001_initial'),
+        ("review", "0001_initial"),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name='question',
-            index=models.Index(fields=['entity_id'], name='review_ques_entity__886633_idx'),
+            model_name="question",
+            index=models.Index(
+                fields=["entity_id"], name="review_ques_entity__886633_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='reviewcycle',
-            index=models.Index(fields=['entity_id'], name='review_revi_entity__c3a3b4_idx'),
+            model_name="reviewcycle",
+            index=models.Index(
+                fields=["entity_id"], name="review_revi_entity__c3a3b4_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='reviewee',
-            index=models.Index(fields=['entity_id'], name='review_revi_entity__677da0_idx'),
+            model_name="reviewee",
+            index=models.Index(
+                fields=["entity_id"], name="review_revi_entity__677da0_idx"
+            ),
         ),
     ]

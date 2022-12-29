@@ -39,7 +39,9 @@ class ReviewCycleDomainService:
         )
         review_cycle.save()
 
-        cls._create_reviewees(review_cycle, review_cycle_create_command.reviewee_ids)
+        cls._create_reviewees(
+            review_cycle, review_cycle_create_command.reviewee_person_ids
+        )
 
         return review_cycle
 
@@ -69,10 +71,7 @@ class ReviewCycleDomainService:
             entity_id=review_cycle_update_command.review_cycle_entity_id
         )
 
-        if (
-            review_cycle.creator.id
-            != review_cycle_update_command.request_user_id
-        ):
+        if review_cycle.creator.id != review_cycle_update_command.request_user_id:
             raise Unauthorized("리뷰 사이클 생성자만 업데이트를 할 수 있습니다")
 
         review_cycle.name = review_cycle_update_command.name

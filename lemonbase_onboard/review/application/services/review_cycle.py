@@ -1,3 +1,7 @@
+from typing import List
+
+from rest_framework.exceptions import ValidationError
+
 from common.http_control_exceptions import Unauthorized
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
 from review.application.requests.review_cycle_delete import ReviewCycleDeleteRequest
@@ -8,6 +12,8 @@ from review.domain.models.review_cycle import ReviewCycle
 from review.application.dtos.review_cycle import ReviewCycleDTO
 from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
 from person.application.dtos.basic_person import BasicPersonDTO
+from person.domain.repositories.person import PersonRepository
+from person.domain.models.person import Person
 from review.domain.repositories.review_cycle import ReviewCycleRepository
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
 
@@ -41,7 +47,12 @@ class ReviewCycleAppService:
     def create_review_cycle(
         cls, create_review_request: ReviewCycleCreateRequest, request_user_id: int
     ) -> ReviewCycleDTO:
+        person_list = PersonRepository.find_by_entitiy_ids_exact(
+            entity_ids=create_review_request.reviewee_entity_ids
+        )
+
         review_cycle_create_command = ReviewCycleCreateCommand(
+            reviewee_person_ids=[person.id for person in person_list],
             request_user_id=request_user_id,
             **create_review_request.dict(),
         )

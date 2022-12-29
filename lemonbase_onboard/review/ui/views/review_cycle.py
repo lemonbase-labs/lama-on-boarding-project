@@ -17,7 +17,7 @@ class ReviewCycleViewSet(viewsets.ViewSet):
             create_review_request=review_create_request, request_user_id=request.user.id
         )
 
-        return Response(review_cycle.dict())
+        return Response(review_cycle.dict(), status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
         review_update_request = ReviewCycleUpdateRequest(**request.data)
