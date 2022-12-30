@@ -8,6 +8,7 @@ from review.domain.models.review_cycle import ReviewCycle
 from review.application.dtos.review_cycle import ReviewCycleDTO
 from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
 from person.application.dtos.basic_person import BasicPersonDTO
+from person.domain.repositories.person import PersonRepository
 from review.domain.repositories.review_cycle import ReviewCycleRepository
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
 
@@ -41,7 +42,12 @@ class ReviewCycleAppService:
     def create_review_cycle(
         cls, create_review_request: ReviewCycleCreateRequest, request_user_id: int
     ) -> ReviewCycleDTO:
+        person_list = PersonRepository.find_by_entitiy_ids_exact(
+            entity_ids=create_review_request.reviewee_entity_ids
+        )
+
         review_cycle_create_command = ReviewCycleCreateCommand(
+            reviewee_person_ids=[person.id for person in person_list],
             request_user_id=request_user_id,
             **create_review_request.dict(),
         )
@@ -58,7 +64,12 @@ class ReviewCycleAppService:
         update_review_request: ReviewCycleUpdateRequest,
         request_user_id: int,
     ):
+        person_list = PersonRepository.find_by_entitiy_ids_exact(
+            entity_ids=update_review_request.reviewee_entity_ids
+        )
+
         review_cycle_create_command = ReviewCycleUpdateCommand(
+            reviewee_person_ids=[person.id for person in person_list],
             review_cycle_entity_id=review_cycle_entity_id,
             request_user_id=request_user_id,
             **update_review_request.dict(),

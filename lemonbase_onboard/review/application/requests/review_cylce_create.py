@@ -8,5 +8,5 @@ from review.application.requests.review_cycle_create_question import (
 
 class ReviewCycleCreateRequest(BaseHttpRequestModel):
     name: str
-    reviewee_ids: List[int]
+    reviewee_entity_ids: List[str]
     question: ReviewCycleCreateQuestionRequest
