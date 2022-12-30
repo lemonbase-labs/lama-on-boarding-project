@@ -10,3 +10,4 @@ class ReviewCycleUpdateRequest(BaseHttpRequestModel):
     name: str
     reviewee_entity_ids: List[str]
     question: ReviewCycleCreateQuestionRequest
+    request_user_id: int

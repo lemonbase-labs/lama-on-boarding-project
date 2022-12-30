@@ -8,7 +8,6 @@ from review.application.dtos.review_cycle import ReviewCycleDTO
 from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
 from person.application.dtos.basic_person import BasicPersonDTO
 from person.domain.repositories.person import PersonRepository
-from review.domain.repositories.review_cycle import ReviewCycleRepository
 from review.domain.services.reviewee_domain import RevieweeDomainService
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
 from review.domain.commands.reviewee_bulk_update import RevieweeBulkUpdateCommand
@@ -43,11 +42,11 @@ class ReviewCycleAppService:
 
     @classmethod
     def create_review_cycle(
-        cls, create_review_request: ReviewCycleCreateRequest, request_user_id: int
+        cls, create_review_request: ReviewCycleCreateRequest
     ) -> ReviewCycleDTO:
 
         review_cycle_create_command = ReviewCycleCreateCommand(
-            request_user_id=request_user_id,
+            request_user_id=create_review_request.request_user_id,
             **create_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.create_review_cycle(
@@ -72,11 +71,10 @@ class ReviewCycleAppService:
         cls,
         review_cycle_entity_id: str,
         update_review_request: ReviewCycleUpdateRequest,
-        request_user_id: int,
     ):
         review_cycle_create_command = ReviewCycleUpdateCommand(
             review_cycle_entity_id=review_cycle_entity_id,
-            request_user_id=request_user_id,
+            request_user_id=update_review_request.request_user_id,
             **update_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.update_review_cycle(
