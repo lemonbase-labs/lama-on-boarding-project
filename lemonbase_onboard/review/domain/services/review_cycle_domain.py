@@ -9,6 +9,8 @@ from review.domain.models.reviewee import Reviewee
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
 from review.domain.commands.review_cycle_update import ReviewCycleUpdateCommand
 from review.domain.repositories.review_cycle import ReviewCycleRepository
+from review.domain.commands.review_cycle_create_question import ReviewCycleCreateQuestionCommand
+from review.domain.commands.review_cycle_update_question import ReviewCycleUpdateQuestionCommand
 
 
 class ReviewCycleDomainService:
@@ -22,15 +24,21 @@ class ReviewCycleDomainService:
             reviewee.save()
 
     @classmethod
+    def _create_question(cls, question_create_command: ReviewCycleCreateQuestionCommand) -> Question:
+        question = Question(
+            title=question_create_command.title,
+            description=question_create_command.description,
+        )
+        question.save()
+
+        return question
+
+    @classmethod
     @transaction.atomic
     def create_review_cycle(
         cls, review_cycle_create_command: ReviewCycleCreateCommand
     ) -> ReviewCycle:
-        question = Question(
-            title=review_cycle_create_command.question.title,
-            description=review_cycle_create_command.question.description,
-        )
-        question.save()
+        question = cls._create_question(review_cycle_create_command.question)
 
         review_cycle = ReviewCycle(
             creator_id=review_cycle_create_command.request_user_id,
@@ -61,6 +69,15 @@ class ReviewCycleDomainService:
         cls._create_reviewees(review_cycle, reviewee_ids)
 
     @classmethod
+    def _update_question(cls, question: Question, update_question_command: ReviewCycleUpdateQuestionCommand) -> Question:
+        question.title = update_question_command.title
+        question.description = (
+            update_question_command.description
+        )
+
+        question.save()
+
+    @classmethod
     @transaction.atomic
     def update_review_cycle(
         cls, review_cycle_update_command: ReviewCycleUpdateCommand
@@ -77,10 +94,7 @@ class ReviewCycleDomainService:
 
         review_cycle.name = review_cycle_update_command.name
 
-        review_cycle.question.title = review_cycle_update_command.question.title
-        review_cycle.question.description = (
-            review_cycle_update_command.question.description
-        )
+        cls._update_question(review_cycle.question, review_cycle_update_command.question)
 
         if cls._is_changed_reviewee_set(
             review_cycle.reviewee_set.all(), review_cycle_update_command.reviewee_ids
