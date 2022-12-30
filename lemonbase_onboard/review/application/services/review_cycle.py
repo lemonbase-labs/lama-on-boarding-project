@@ -1,6 +1,5 @@
 from common.http_control_exceptions import Unauthorized
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
-from review.application.requests.review_cycle_delete import ReviewCycleDeleteRequest
 from review.domain.services.review_cycle_domain import ReviewCycleDomainService
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
 from review.domain.commands.review_cycle_update import ReviewCycleUpdateCommand
@@ -14,6 +13,7 @@ from review.domain.services.reviewee_domain import RevieweeDomainService
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
 from review.domain.commands.reviewee_bulk_update import RevieweeBulkUpdateCommand
 from review.domain.commands.reviewee_bulk_create import RevieweeBulkCreateCommand
+from review.domain.commands.review_cycle_delete import ReviewCycleDeleteCommand
 
 
 class ReviewCycleAppService:
@@ -98,12 +98,6 @@ class ReviewCycleAppService:
 
     @classmethod
     def delete_review_cycle(
-        cls, delete_review_request: ReviewCycleDeleteRequest, request_user_id: int
+        cls, delete_review_cycle_command: ReviewCycleDeleteCommand
     ) -> None:
-        review_cycle: ReviewCycle = ReviewCycleRepository.find_one(
-            entity_id=delete_review_request.review_cycle_entity_id
-        )
-        if review_cycle.creator.id != request_user_id:
-            raise Unauthorized("리뷰 사이클 생성자만 삭제가 가능합니다")
-
-        review_cycle.delete()
+        ReviewCycleDomainService.delete_review_cycle(delete_review_cycle_command)

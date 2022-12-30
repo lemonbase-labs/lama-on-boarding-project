@@ -5,7 +5,6 @@ from django.db import transaction
 from common.http_control_exceptions import Unauthorized
 from review.domain.models.review_cycle import ReviewCycle
 from review.domain.models.question import Question
-from review.domain.models.reviewee import Reviewee
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
 from review.domain.commands.review_cycle_update import ReviewCycleUpdateCommand
 from review.domain.repositories.review_cycle import ReviewCycleRepository
@@ -15,6 +14,7 @@ from review.domain.commands.review_cycle_create_question import (
 from review.domain.commands.review_cycle_update_question import (
     ReviewCycleUpdateQuestionCommand,
 )
+from review.domain.commands.review_cycle_delete import ReviewCycleDeleteCommand
 
 
 class ReviewCycleDomainService:
@@ -65,6 +65,11 @@ class ReviewCycleDomainService:
         question.save()
 
     @classmethod
+    def _check_review_cycle_permission(cls, review_cycle: ReviewCycle, request_person_id: int):
+        if review_cycle.creator.id != request_person_id:
+            raise Unauthorized("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
+
+    @classmethod
     @transaction.atomic
     def update_review_cycle(
         cls, review_cycle_update_command: ReviewCycleUpdateCommand
@@ -73,8 +78,7 @@ class ReviewCycleDomainService:
             entity_id=review_cycle_update_command.review_cycle_entity_id
         )
 
-        if review_cycle.creator.id != review_cycle_update_command.request_user_id:
-            raise Unauthorized("리뷰 사이클 생성자만 업데이트를 할 수 있습니다")
+        cls._check_review_cycle_permission(review_cycle.creator.id, review_cycle_update_command.request_user_id)
 
         review_cycle.name = review_cycle_update_command.name
 
@@ -83,3 +87,12 @@ class ReviewCycleDomainService:
         )
 
         return review_cycle
+
+    @classmethod
+    def delete_review_cycle(cls, delete_review_command: ReviewCycleDeleteCommand):
+        review_cycle: ReviewCycle = ReviewCycleRepository.find_one(
+            entity_id=delete_review_command.review_cycle_entity_id
+        )
+        cls._check_review_cycle_permission(review_cycle.creator.id, delete_review_command.request_user_id)
+
+        review_cycle.delete()
