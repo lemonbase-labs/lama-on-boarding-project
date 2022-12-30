@@ -10,5 +10,4 @@ from review.domain.commands.review_cycle_create_question import (
 class ReviewCycleCreateCommand(BaseModel):
     request_user_id: int
     name: str
-    reviewee_person_ids: List[int]
     question: ReviewCycleCreateQuestionCommand
