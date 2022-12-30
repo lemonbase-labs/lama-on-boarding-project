@@ -10,7 +10,10 @@ from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
 from person.application.dtos.basic_person import BasicPersonDTO
 from person.domain.repositories.person import PersonRepository
 from review.domain.repositories.review_cycle import ReviewCycleRepository
+from review.domain.services.reviewee_domain import RevieweeDomainService
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
+from review.domain.commands.reviewee_bulk_update import RevieweeBulkUpdateCommand
+from review.domain.commands.reviewee_bulk_create import RevieweeBulkCreateCommand
 
 
 class ReviewCycleAppService:
@@ -42,17 +45,24 @@ class ReviewCycleAppService:
     def create_review_cycle(
         cls, create_review_request: ReviewCycleCreateRequest, request_user_id: int
     ) -> ReviewCycleDTO:
-        person_list = PersonRepository.find_by_entitiy_ids_exact(
-            entity_ids=create_review_request.reviewee_entity_ids
-        )
 
         review_cycle_create_command = ReviewCycleCreateCommand(
-            reviewee_person_ids=[person.id for person in person_list],
             request_user_id=request_user_id,
             **create_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.create_review_cycle(
             review_cycle_create_command=review_cycle_create_command,
+        )
+
+        person_list = PersonRepository.find_by_entitiy_ids_exact(
+            entity_ids=create_review_request.reviewee_entity_ids
+        )
+        reviewee_bulk_create_command = RevieweeBulkCreateCommand(
+            review_cycle_id=review_cycle.id,
+            person_ids=[person.id for person in person_list],
+        )
+        RevieweeDomainService.create_reviewees(
+            reviewee_bulk_create_command=reviewee_bulk_create_command
         )
 
         return cls._review_cycle_to_dto(review_cycle)
@@ -64,18 +74,24 @@ class ReviewCycleAppService:
         update_review_request: ReviewCycleUpdateRequest,
         request_user_id: int,
     ):
-        person_list = PersonRepository.find_by_entitiy_ids_exact(
-            entity_ids=update_review_request.reviewee_entity_ids
-        )
-
         review_cycle_create_command = ReviewCycleUpdateCommand(
-            reviewee_person_ids=[person.id for person in person_list],
             review_cycle_entity_id=review_cycle_entity_id,
             request_user_id=request_user_id,
             **update_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.update_review_cycle(
             review_cycle_create_command
+        )
+
+        person_list = PersonRepository.find_by_entitiy_ids_exact(
+            entity_ids=update_review_request.reviewee_entity_ids
+        )
+        reviewee_bulk_update_command = RevieweeBulkUpdateCommand(
+            review_cycle_id=review_cycle.id,
+            person_ids=[person.id for person in person_list],
+        )
+        RevieweeDomainService.update_reviewees(
+            reviewee_bulk_update_command=reviewee_bulk_update_command
         )
 
         return cls._review_cycle_to_dto(review_cycle)
