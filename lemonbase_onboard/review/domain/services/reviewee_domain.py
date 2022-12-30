@@ -9,11 +9,11 @@ from review.domain.repositories.reviewee import RevieweeRepository
 class RevieweeDomainService:
     @classmethod
     def create_reviewees(
-        cls, create_bulk_command_list: RevieweeBulkCreateCommand
+        cls, reviewee_bulk_create_command: RevieweeBulkCreateCommand
     ) -> List[Reviewee]:
         return cls._create_reviewees(
-            create_bulk_command_list.review_cycle_id,
-            create_bulk_command_list.person_ids,
+            reviewee_bulk_create_command.review_cycle_id,
+            reviewee_bulk_create_command.person_ids,
         )
 
     @classmethod
