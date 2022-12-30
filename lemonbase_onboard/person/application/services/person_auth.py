@@ -14,5 +14,5 @@ class PersonAuthAppService:
             password=make_password(person_register_request.password),
             name=person_register_request.name,
         )
-        person = PersonRepository.register(person_register_command)
+        person = PersonRepository.create(person_register_command)
         return BasicPersonDTO(**person.__dict__)

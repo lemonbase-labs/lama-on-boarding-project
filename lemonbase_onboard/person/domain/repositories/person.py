@@ -7,7 +7,7 @@ class PersonRepository(BaseRepository):
     model = Person
 
     @classmethod
-    def register(cls, person_register_command: PersonRegisterCommand) -> Person:
+    def create(cls, person_register_command: PersonRegisterCommand) -> Person:
         person = cls.model(
             **person_register_command.dict(),
         )
