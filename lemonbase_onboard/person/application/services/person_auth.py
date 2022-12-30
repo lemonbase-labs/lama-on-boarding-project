@@ -1,10 +1,14 @@
+from typing import Optional, Any
+
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import authenticate
 
 from person.application.requests.person_register import PersonRegisterRequest
+from person.application.requests.person_login import PersonLoginRequest
 from person.application.dtos.basic_person import BasicPersonDTO
 from person.domain.repositories.person import PersonRepository
 from person.domain.commands.person_register import PersonRegisterCommand
-
+from person.domain.models.person import Person
 
 class PersonAuthAppService:
     @classmethod
@@ -16,3 +20,10 @@ class PersonAuthAppService:
         )
         person = PersonRepository.create(person_register_command)
         return BasicPersonDTO(**person.__dict__)
+
+    @classmethod
+    def login(cls, person_login_request: PersonLoginRequest) -> Optional[Person]:
+        return authenticate(
+            email=person_login_request.email,
+            password=person_login_request.password,
+        )

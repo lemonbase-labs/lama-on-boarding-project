@@ -19,12 +19,7 @@ class PersonAuthViewSet(viewsets.ViewSet):
     @action(url_path="login", methods=["post"], detail=False)
     def login(self, request):
         person_login_request = PersonLoginRequest(**request.data)
-
-        user = authenticate(
-            request=request,
-            email=person_login_request.email,
-            password=person_login_request.password,
-        )
+        user = PersonAuthAppService.login(person_login_request)
 
         if not user:
             return Response(None, status=status.HTTP_401_UNAUTHORIZED)
