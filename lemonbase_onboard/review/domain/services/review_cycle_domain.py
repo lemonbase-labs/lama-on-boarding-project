@@ -65,7 +65,9 @@ class ReviewCycleDomainService:
         question.save()
 
     @classmethod
-    def _check_review_cycle_permission(cls, review_cycle: ReviewCycle, request_person_id: int):
+    def _check_review_cycle_permission(
+        cls, review_cycle: ReviewCycle, request_person_id: int
+    ):
         if review_cycle.creator.id != request_person_id:
             raise Unauthorized("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
 
@@ -78,7 +80,9 @@ class ReviewCycleDomainService:
             entity_id=review_cycle_update_command.review_cycle_entity_id
         )
 
-        cls._check_review_cycle_permission(review_cycle.creator.id, review_cycle_update_command.request_user_id)
+        cls._check_review_cycle_permission(
+            review_cycle.creator.id, review_cycle_update_command.request_user_id
+        )
 
         review_cycle.name = review_cycle_update_command.name
 
@@ -93,6 +97,8 @@ class ReviewCycleDomainService:
         review_cycle: ReviewCycle = ReviewCycleRepository.find_one(
             entity_id=delete_review_command.review_cycle_entity_id
         )
-        cls._check_review_cycle_permission(review_cycle.creator.id, delete_review_command.request_user_id)
+        cls._check_review_cycle_permission(
+            review_cycle.creator.id, delete_review_command.request_user_id
+        )
 
         review_cycle.delete()
