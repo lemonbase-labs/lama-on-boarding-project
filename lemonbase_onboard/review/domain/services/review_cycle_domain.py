@@ -1,5 +1,3 @@
-from typing import List
-
 from django.db import transaction
 
 from common.http_control_exceptions import Unauthorized
@@ -44,14 +42,7 @@ class ReviewCycleDomainService:
         )
         review_cycle.save()
 
-        cls._create_reviewees(review_cycle, review_cycle_create_command.reviewee_ids)
-
         return review_cycle
-
-    @classmethod
-    def _reset_reviewees(cls, review_cycle: ReviewCycle, reviewee_ids: List[int]):
-        review_cycle.reviewee_set.all().delete()
-        cls._create_reviewees(review_cycle, reviewee_ids)
 
     @classmethod
     def _update_question(
