@@ -12,13 +12,14 @@ class BaseHttpRequestModel(BaseModel):
 
         :return: bool
         """
-        return (key in self.__annotations__.keys()
-                and type(value) is list
-                and getattr(self.__annotations__.get(key), "__origin__", None)
-                is not list
-                and getattr(self.__annotations__.get(key), "__class__", None)
-                is not ModelMetaclass
-                and len(value) == 1)
+        return (
+            key in self.__annotations__.keys()
+            and type(value) is list
+            and getattr(self.__annotations__.get(key), "__origin__", None) is not list
+            and getattr(self.__annotations__.get(key), "__class__", None)
+            is not ModelMetaclass
+            and len(value) == 1
+        )
 
     def __init__(self, *args, **kwargs):
         for key, value in kwargs.items():

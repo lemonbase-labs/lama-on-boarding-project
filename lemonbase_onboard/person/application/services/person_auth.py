@@ -10,6 +10,7 @@ from person.domain.repositories.person import PersonRepository
 from person.domain.commands.person_register import PersonRegisterCommand
 from person.domain.models.person import Person
 
+
 class PersonAuthAppService:
     @classmethod
     def register(cls, person_register_request: PersonRegisterRequest) -> BasicPersonDTO:
