@@ -1,4 +1,3 @@
-from common.http_control_exceptions import Unauthorized
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
 from review.domain.services.review_cycle_domain import ReviewCycleDomainService
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
@@ -46,7 +45,6 @@ class ReviewCycleAppService:
     ) -> ReviewCycleDTO:
 
         review_cycle_create_command = ReviewCycleCreateCommand(
-            request_user_id=create_review_request.request_user_id,
             **create_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.create_review_cycle(
@@ -74,7 +72,6 @@ class ReviewCycleAppService:
     ):
         review_cycle_create_command = ReviewCycleUpdateCommand(
             review_cycle_entity_id=review_cycle_entity_id,
-            request_user_id=update_review_request.request_user_id,
             **update_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.update_review_cycle(

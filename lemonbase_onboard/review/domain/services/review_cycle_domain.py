@@ -72,7 +72,7 @@ class ReviewCycleDomainService:
         )
 
         cls._check_review_cycle_permission(
-            review_cycle.creator.id, review_cycle_update_command.request_user_id
+            review_cycle, review_cycle_update_command.request_user_id
         )
 
         review_cycle.name = review_cycle_update_command.name
@@ -80,6 +80,7 @@ class ReviewCycleDomainService:
         cls._update_question(
             review_cycle.question, review_cycle_update_command.question
         )
+        review_cycle.save()
 
         return review_cycle
 
@@ -89,7 +90,7 @@ class ReviewCycleDomainService:
             entity_id=delete_review_command.review_cycle_entity_id
         )
         cls._check_review_cycle_permission(
-            review_cycle.creator.id, delete_review_command.request_user_id
+            review_cycle, delete_review_command.request_user_id
         )
 
         review_cycle.delete()
