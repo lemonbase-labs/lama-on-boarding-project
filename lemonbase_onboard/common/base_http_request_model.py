@@ -1,3 +1,4 @@
+from pydantic.main import ModelMetaclass
 from pydantic import BaseModel, ValidationError
 
 from rest_framework.exceptions import ValidationError as RestValidationError
@@ -12,12 +13,14 @@ class BaseHttpRequestModel(BaseModel):
         :return: bool
         """
         return (key in self.__annotations__.keys()
-                and len(value) == 1
+                and type(value) is list
                 and getattr(self.__annotations__.get(key), "__origin__", None)
-                is not list)
+                is not list
+                and getattr(self.__annotations__.get(key), "__class__", None)
+                is not ModelMetaclass
+                and len(value) == 1)
 
     def __init__(self, *args, **kwargs):
-        kwargs = self._convert(kwargs)
         for key, value in kwargs.items():
             if self._check_non_list_type(key, value):
                 kwargs[key] = value[0]
