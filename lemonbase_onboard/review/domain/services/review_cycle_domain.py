@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from common.http_control_exceptions import Unauthorized
+from common.http_control_exceptions import HttpForbidden
 from review.domain.models.review_cycle import ReviewCycle
 from review.domain.models.question import Question
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
@@ -60,7 +60,7 @@ class ReviewCycleDomainService:
         cls, review_cycle: ReviewCycle, request_person_id: int
     ):
         if review_cycle.creator.id != request_person_id:
-            raise Unauthorized("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
+            raise HttpForbidden("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
 
     @classmethod
     @transaction.atomic
