@@ -1,9 +1,9 @@
-from datetime import datetime
+from rest_framework import serializers
 
-from pydantic import BaseModel
+from person.models import Person
 
 
-class BasicPersonDTO(BaseModel):
-    email: str
-    name: str
-    registered_at: datetime
+class BasicPersonDTO(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ['email', 'name', 'registered_at']

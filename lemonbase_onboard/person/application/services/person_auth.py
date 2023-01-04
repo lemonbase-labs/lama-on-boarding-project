@@ -19,7 +19,7 @@ class PersonAuthAppService:
             name=person_register_request.name,
         )
         person = PersonRepository.create(person_register_command)
-        return BasicPersonDTO(**person.__dict__)
+        return BasicPersonDTO(person)
 
     @classmethod
     def login(cls, person_login_request: PersonLoginRequest) -> Optional[Person]:

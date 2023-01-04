@@ -38,4 +38,4 @@ class PersonAuthViewSet(viewsets.ViewSet):
         person_register_request = PersonRegisterRequest(**request.data)
         person = PersonAuthAppService.register(person_register_request)
 
-        return Response(person.dict(), status.HTTP_201_CREATED)
+        return Response(person.data, status.HTTP_201_CREATED)
