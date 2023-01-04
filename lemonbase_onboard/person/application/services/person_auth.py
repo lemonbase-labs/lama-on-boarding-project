@@ -1,6 +1,5 @@
-from typing import Optional, Any
+from typing import Optional
 
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 
 from person.application.requests.person_register import PersonRegisterRequest
@@ -9,6 +8,7 @@ from person.application.dtos.basic_person import BasicPersonDTO
 from person.domain.repositories.person import PersonRepository
 from person.domain.commands.person_register import PersonRegisterCommand
 from person.domain.models.person import Person
+
 
 class PersonAuthAppService:
     @classmethod
