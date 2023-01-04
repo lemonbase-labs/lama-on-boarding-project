@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password
 
 
 class Person(AbstractUser):
@@ -18,3 +19,6 @@ class Person(AbstractUser):
         indexes = [
             models.Index(fields=["entity_id"]),
         ]
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
