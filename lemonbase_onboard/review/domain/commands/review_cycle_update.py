@@ -11,4 +11,5 @@ class ReviewCycleUpdateCommand(BaseModel):
     review_cycle_entity_id: str
     request_user_id: int
     name: str
+    reviewee_entity_ids: List[str]
     question: ReviewCycleUpdateQuestionCommand

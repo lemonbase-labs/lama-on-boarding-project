@@ -54,9 +54,9 @@ class RevieweeDomainService:
             review_cycle_id=reviewee_bulk_update_command.review_cycle_id
         )
         if cls._is_changed_reviewee_set(
-            before_reviewees, reviewee_bulk_update_command.reviewee_person_ids
+            before_reviewees, reviewee_bulk_update_command.person_ids
         ):
             cls._reset_reviewees(
                 reviewee_bulk_update_command.review_cycle_id,
-                reviewee_bulk_update_command.reviewee_person_ids,
+                reviewee_bulk_update_command.person_ids,
             )

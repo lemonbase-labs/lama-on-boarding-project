@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from common.http_control_exceptions import Unauthorized
+from common.http_control_exceptions import HttpForbidden
 from review.domain.models.review_cycle import ReviewCycle
 from review.domain.models.question import Question
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
@@ -45,22 +45,11 @@ class ReviewCycleDomainService:
         return review_cycle
 
     @classmethod
-    def _update_question(
-        cls,
-        question: Question,
-        update_question_command: ReviewCycleUpdateQuestionCommand,
-    ) -> Question:
-        question.title = update_question_command.title
-        question.description = update_question_command.description
-
-        question.save()
-
-    @classmethod
     def _check_review_cycle_permission(
         cls, review_cycle: ReviewCycle, request_person_id: int
     ):
         if review_cycle.creator.id != request_person_id:
-            raise Unauthorized("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
+            raise HttpForbidden("리뷰 사이클 생성자만 해당 액션을 할 수 있습니다")
 
     @classmethod
     @transaction.atomic
@@ -72,14 +61,16 @@ class ReviewCycleDomainService:
         )
 
         cls._check_review_cycle_permission(
-            review_cycle.creator.id, review_cycle_update_command.request_user_id
+            review_cycle, review_cycle_update_command.request_user_id
         )
 
         review_cycle.name = review_cycle_update_command.name
-
-        cls._update_question(
-            review_cycle.question, review_cycle_update_command.question
+        review_cycle.question.update_question(
+            title=review_cycle_update_command.question.title,
+            description=review_cycle_update_command.question.description,
         )
+
+        review_cycle.save()
 
         return review_cycle
 
@@ -89,7 +80,7 @@ class ReviewCycleDomainService:
             entity_id=delete_review_command.review_cycle_entity_id
         )
         cls._check_review_cycle_permission(
-            review_cycle.creator.id, delete_review_command.request_user_id
+            review_cycle, delete_review_command.request_user_id
         )
 
         review_cycle.delete()
