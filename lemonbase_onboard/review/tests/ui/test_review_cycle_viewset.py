@@ -32,7 +32,7 @@ class ReviewCycleViewsetTests(APITestCase):
 
         self.client.login(username=self.person_id, password="password")
 
-    def test_리뷰_사이클_생성_비로그인시_403(self):
+    def test_리뷰_사이클__when__생성_비로그인시__expect__403_forbidden(self):
         resp = self.unauth_client.post(
             "/review/",
             {
@@ -47,7 +47,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_리뷰_사이클_생성_필수인_필드가_없는_경우_400(self):
+    def test_리뷰_사이클__when__생성_필수인_필드가_없는_경우__expect__400_bad_request(self):
         # 1. without name
         resp = self.client.post(
             "/review/",
@@ -99,7 +99,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_리뷰_사이클_생성_정상인_경우_201(self):
+    def test_리뷰_사이클__when__생성_정상인_경우__expect__201_created(self):
         resp = self.client.post(
             "/review/",
             {
@@ -114,7 +114,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-    def test_리뷰_사이클_업데이트_비로그인시_403(self):
+    def test_리뷰_사이클__when__업데이트_비로그인시__expect__403_forbidden(self):
         resp = self.unauth_client.put(
             f"/review/{str(self.review_cycle.entity_id)}/",
             {
@@ -129,7 +129,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_리뷰_사이클_업데이트_생성자가_아닌_경우_403(self):
+    def test_리뷰_사이클__when__업데이트_생성자가_아닌_경우__expect__403_forbidden(self):
         client = APIClient()
         client.login(username=self.person2_id, password="password")
 
@@ -147,7 +147,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_리뷰_사이클_업데이트_정상인_경우_200(self):
+    def test_리뷰_사이클__when__업데이트_정상인_경우__expect__200_ok(self):
         modified_name = "modified review cycle"
         modified_question_title = "modified question title"
         modified_question_description = "modified question description"
@@ -172,13 +172,13 @@ class ReviewCycleViewsetTests(APITestCase):
         self.assertEqual(self.review_cycle.question.title, modified_question_title)
         self.assertEqual(self.review_cycle.question.description, modified_question_description)
 
-    def test_리뷰_사이클_삭제_비로그인시_403(self):
+    def test_리뷰_사이클__when__삭제_비로그인시__expect__403_forbidden(self):
         resp = self.unauth_client.delete(
             f"/review/{str(self.review_cycle.entity_id)}/",
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_리뷰_사이클_삭제_생성자가_아닌_경우_403(self):
+    def test_리뷰_사이클__when__삭제_생성자가_아닌_경우__expect__403_forbidden(self):
         client = APIClient()
         client.login(username=self.person2_id, password="password")
 
@@ -187,7 +187,7 @@ class ReviewCycleViewsetTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_리뷰_사이클_삭제_정상인_경우_204(self):
+    def test_리뷰_사이클__when__삭제_정상인_경우__expect__204_no_content(self):
         resp = self.client.delete(
             f"/review/{str(self.review_cycle.entity_id)}/",
         )
