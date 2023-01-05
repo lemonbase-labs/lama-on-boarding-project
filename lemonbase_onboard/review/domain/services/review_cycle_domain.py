@@ -45,17 +45,6 @@ class ReviewCycleDomainService:
         return review_cycle
 
     @classmethod
-    def _update_question(
-        cls,
-        question: Question,
-        update_question_command: ReviewCycleUpdateQuestionCommand,
-    ) -> Question:
-        question.title = update_question_command.title
-        question.description = update_question_command.description
-
-        question.save()
-
-    @classmethod
     def _check_review_cycle_permission(
         cls, review_cycle: ReviewCycle, request_person_id: int
     ):
@@ -76,10 +65,11 @@ class ReviewCycleDomainService:
         )
 
         review_cycle.name = review_cycle_update_command.name
-
-        cls._update_question(
-            review_cycle.question, review_cycle_update_command.question
+        review_cycle.question.update_question(
+            title=review_cycle_update_command.question.title,
+            description=review_cycle_update_command.question.description,
         )
+
         review_cycle.save()
 
         return review_cycle

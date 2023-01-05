@@ -13,3 +13,9 @@ class Question(models.Model):
         indexes = [
             models.Index(fields=["entity_id"]),
         ]
+
+    def update_question(self, title: str, description: str):
+        self.title = title
+        self.description = description
+
+        self.save()
