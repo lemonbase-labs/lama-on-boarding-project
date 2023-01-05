@@ -1,10 +1,8 @@
-from common.http_control_exceptions import Unauthorized
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
 from review.domain.services.review_cycle_domain import ReviewCycleDomainService
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
 from review.domain.commands.review_cycle_update import ReviewCycleUpdateCommand
-from review.domain.models.review_cycle import ReviewCycle
-from review.application.dtos.review_cycle import ReviewCycleDTO
+from review.application.serializers.review_cycle import ReviewCycleSerializer
 from person.domain.repositories.person import PersonRepository
 from review.domain.services.reviewee_domain import RevieweeDomainService
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
@@ -17,7 +15,7 @@ class ReviewCycleAppService:
     @classmethod
     def create_review_cycle(
         cls, create_review_request: ReviewCycleCreateRequest
-    ) -> ReviewCycleDTO:
+    ) -> ReviewCycleSerializer:
 
         review_cycle_create_command = ReviewCycleCreateCommand(
             request_user_id=create_review_request.request_user_id,
@@ -38,7 +36,7 @@ class ReviewCycleAppService:
             reviewee_bulk_create_command=reviewee_bulk_create_command
         )
 
-        return ReviewCycleDTO(review_cycle)
+        return ReviewCycleSerializer(review_cycle)
 
     @classmethod
     def update_review_cycle(
@@ -66,7 +64,7 @@ class ReviewCycleAppService:
             reviewee_bulk_update_command=reviewee_bulk_update_command
         )
 
-        return ReviewCycleDTO(review_cycle)
+        return ReviewCycleSerializer(review_cycle)
 
     @classmethod
     def delete_review_cycle(

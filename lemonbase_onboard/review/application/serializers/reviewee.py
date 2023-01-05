@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from review.models import Reviewee
-from person.application.dtos.basic_person import BasicPersonDTO
+from person.application.serializers.basic_person import BasicPersonSerializer
 
 
-class RevieweeDTO(serializers.ModelSerializer):
+class RevieweeSerializer(serializers.ModelSerializer):
     entity_id = serializers.UUIDField()
-    person = BasicPersonDTO
+    person = BasicPersonSerializer
 
     class Meta:
         model = Reviewee
