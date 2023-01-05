@@ -6,10 +6,15 @@ from person.domain.models.person import Person
 
 
 class PersonAuthTests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.client = APIClient()
+        cls.person_email = "test1@email.com"
+        cls.person_password = "password"
+
     def setUp(self) -> None:
-        self.client = APIClient()
         Person(
-            email="test1@email.com", password=make_password("password"), name="name"
+            email=self.person_email, password=make_password(self.person_password), name="name"
         ).save()
 
     def test_회원_가입__when__id가_이메일_형식이_아닐_경우__expected__400_bad_request(self):
