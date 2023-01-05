@@ -1,8 +1,8 @@
 from rest_framework.test import APIClient, APITestCase
-from django.contrib.auth.hashers import make_password
 from rest_framework import status
 
-from person.domain.models.person import Person
+from person.application.services.person_auth import PersonAuthAppService
+from person.application.requests.person_register import PersonRegisterRequest
 
 
 class PersonAuthTests(APITestCase):
@@ -13,9 +13,11 @@ class PersonAuthTests(APITestCase):
         cls.person_password = "password"
 
     def setUp(self) -> None:
-        Person(
-            email=self.person_email, password=make_password(self.person_password), name="name"
-        ).save()
+        PersonAuthAppService.register(
+            PersonRegisterRequest(
+                email=self.person_email, password=self.person_password, name="name"
+            )
+        )
 
     def test_회원_가입__when__id가_이메일_형식이_아닐_경우__expected__400_bad_request(self):
         resp = self.client.post(
