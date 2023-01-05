@@ -57,16 +57,11 @@ class PersonAuthTests(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        resp = self.client.post(
-            "/person/register/",
-            {"email": "email@email.com", "password": "password", "name": "name"},
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-
     def test_로그인__when__id는_맞지만_비밀번호는_틀린_정보로_요청한_경우__expected__401_unauthorized(self):
+        wrong_password = "wrong_password"
         resp = self.client.post(
             "/person/login/",
-            {"email": "email@email.com", "password": "password1"},
+            {"email": self.person_email, "password": wrong_password},
         )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -80,8 +75,8 @@ class PersonAuthTests(APITestCase):
         resp = self.client.post("/person/logout/")
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
-        self.client.login(email="test1@email.com", password="password")
     def test_로그아웃__when__로그인한_상태일_경우__expected__204_no_content(self):
+        self.client.login(email=self.person_email, password=self.person_password)
         resp = self.client.post("/person/logout/")
 
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
