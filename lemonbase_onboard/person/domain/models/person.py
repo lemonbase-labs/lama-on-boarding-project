@@ -8,7 +8,7 @@ class Person(AbstractUser):
     id = models.AutoField(primary_key=True)
     entity_id = models.UUIDField(default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=30)
+    username = None
     name = models.CharField(max_length=128)
     registered_at = models.DateTimeField(auto_now_add=True, editable=False)
 
