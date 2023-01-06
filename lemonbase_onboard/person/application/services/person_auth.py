@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate
 
 from person.application.requests.person_register import PersonRegisterRequest
 from person.application.requests.person_login import PersonLoginRequest
-from person.application.dtos.basic_person import BasicPersonDTO
+from person.application.serializers.basic_person import BasicPersonSerializer
 from person.domain.repositories.person import PersonRepository
 from person.domain.commands.person_register import PersonRegisterCommand
 from person.domain.models.person import Person
@@ -12,14 +12,14 @@ from person.domain.models.person import Person
 
 class PersonAuthAppService:
     @classmethod
-    def register(cls, person_register_request: PersonRegisterRequest) -> BasicPersonDTO:
+    def register(cls, person_register_request: PersonRegisterRequest) -> BasicPersonSerializer:
         person_register_command = PersonRegisterCommand(
             email=person_register_request.email,
             password=person_register_request.password,
             name=person_register_request.name,
         )
         person = PersonRepository.create(person_register_command)
-        return BasicPersonDTO(**person.__dict__)
+        return BasicPersonSerializer(person)
 
     @classmethod
     def login(cls, person_login_request: PersonLoginRequest) -> Optional[Person]:
