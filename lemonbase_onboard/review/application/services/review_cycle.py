@@ -1,12 +1,8 @@
-from common.http_control_exceptions import Unauthorized
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
 from review.domain.services.review_cycle_domain import ReviewCycleDomainService
 from review.domain.commands.review_cycle_create import ReviewCycleCreateCommand
 from review.domain.commands.review_cycle_update import ReviewCycleUpdateCommand
-from review.domain.models.review_cycle import ReviewCycle
-from review.application.dtos.review_cycle import ReviewCycleDTO
-from review.application.dtos.review_cycle_question import ReviewCycleQuestionDTO
-from person.application.dtos.basic_person import BasicPersonDTO
+from review.application.serializers.review_cycle import ReviewCycleSerializer
 from person.domain.repositories.person import PersonRepository
 from review.domain.services.reviewee_domain import RevieweeDomainService
 from review.application.requests.review_cycle_update import ReviewCycleUpdateRequest
@@ -17,36 +13,11 @@ from review.domain.commands.review_cycle_delete import ReviewCycleDeleteCommand
 
 class ReviewCycleAppService:
     @classmethod
-    def _review_cycle_to_dto(cls, review_cycle: ReviewCycle) -> ReviewCycleDTO:
-        return ReviewCycleDTO(
-            entity_id=str(review_cycle.entity_id),
-            name=review_cycle.name,
-            person=BasicPersonDTO(
-                email=review_cycle.creator.email,
-                name=review_cycle.creator.name,
-                registered_at=review_cycle.creator.registered_at,
-            ),
-            question=ReviewCycleQuestionDTO(
-                title=review_cycle.question.title,
-                description=review_cycle.question.description,
-            ),
-            reviewee=[
-                BasicPersonDTO(
-                    email=reviewee.person.email,
-                    name=reviewee.person.name,
-                    registered_at=reviewee.person.registered_at,
-                )
-                for reviewee in review_cycle.reviewee_set.all()
-            ],
-        )
-
-    @classmethod
     def create_review_cycle(
         cls, create_review_request: ReviewCycleCreateRequest
-    ) -> ReviewCycleDTO:
+    ) -> ReviewCycleSerializer:
 
         review_cycle_create_command = ReviewCycleCreateCommand(
-            request_user_id=create_review_request.request_user_id,
             **create_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.create_review_cycle(
@@ -64,7 +35,7 @@ class ReviewCycleAppService:
             reviewee_bulk_create_command=reviewee_bulk_create_command
         )
 
-        return cls._review_cycle_to_dto(review_cycle)
+        return ReviewCycleSerializer(review_cycle)
 
     @classmethod
     def update_review_cycle(
@@ -74,7 +45,6 @@ class ReviewCycleAppService:
     ):
         review_cycle_create_command = ReviewCycleUpdateCommand(
             review_cycle_entity_id=review_cycle_entity_id,
-            request_user_id=update_review_request.request_user_id,
             **update_review_request.dict(),
         )
         review_cycle = ReviewCycleDomainService.update_review_cycle(
@@ -92,7 +62,7 @@ class ReviewCycleAppService:
             reviewee_bulk_update_command=reviewee_bulk_update_command
         )
 
-        return cls._review_cycle_to_dto(review_cycle)
+        return ReviewCycleSerializer(review_cycle)
 
     @classmethod
     def delete_review_cycle(

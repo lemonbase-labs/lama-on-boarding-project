@@ -12,8 +12,11 @@ class PersonRepository(BaseRepository):
     @classmethod
     def create(cls, person_register_command: PersonRegisterCommand) -> Person:
         person = cls.model(
-            **person_register_command.dict(),
+            email=person_register_command.email,
+            name=person_register_command.name,
         )
+
+        person.set_password(person_register_command.password)
         person.save()
         return person
 

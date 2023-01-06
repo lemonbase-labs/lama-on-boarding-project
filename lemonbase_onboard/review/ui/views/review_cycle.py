@@ -19,7 +19,7 @@ class ReviewCycleViewSet(viewsets.ViewSet):
             create_review_request=review_create_request,
         )
 
-        return Response(review_cycle.dict(), status=status.HTTP_201_CREATED)
+        return Response(review_cycle.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, pk=None):
         review_update_request = ReviewCycleUpdateRequest(
@@ -30,7 +30,7 @@ class ReviewCycleViewSet(viewsets.ViewSet):
             update_review_request=review_update_request,
         )
 
-        return Response(review_cycle.dict())
+        return Response(review_cycle.data)
 
     def delete(self, request, pk=None):
         review_delete_reqeust = ReviewCycleDeleteCommand(
