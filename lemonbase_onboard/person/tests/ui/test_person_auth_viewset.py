@@ -1,8 +1,8 @@
-from typing import Dict
-
-from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
+from rest_framework.test import APIClient
+from django.contrib.auth.hashers import make_password
 
+from person.domain.models.person import Person
 from person.tests.ui.base_person_ui_test import BasePersonUITest
 from person.application.services.person_auth import PersonAuthAppService
 from person.application.requests.person_register import PersonRegisterRequest
@@ -41,10 +41,23 @@ class PersonAuthTests(BasePersonUITest):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_회원_가입__when__정상적으로_회원_가입이_됬을_경우__expected__201_created(self):
+        # Given
+        expect_user_email = "email@email.com"
+        expect_user_name = "name"
+        expect_user_password = "password"
+
+        # When
         resp = self.register(
-            {"email": "email@email.com", "password": "password", "name": "name"},
+            {"email": expect_user_email, "password": expect_user_name, "name": expect_user_password},
         )
+
+        # Then
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        person = Person.objects.get(email=expect_user_email)
+        self.assertEqual(person.email, expect_user_email)
+        self.assertEqual(person.name, expect_user_name)
+        self.assertEqual(person.password, make_password(expect_user_password))
 
     def test_로그인__when__없는_계정으로_요청한_경우__expected__401_unauthorized(self):
         resp = self.login(
