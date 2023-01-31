@@ -30,13 +30,11 @@ class PersonAuthTests(BasePersonUITest):
         resp = self.register({"password": "password", "name": "name"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_회원_가입__when__id가_이메일이_없는_경우__expected__400_bad_request(self):
-        # Case 2. Missing password
+    def test_회원_가입__when__id가_비밀번호가_없는_경우__expected__400_bad_request(self):
         resp = self.register({"email": "email@email.com", "name": "name"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_회원_가입__when__id가_이메일이_없는_경우__expected__400_bad_request(self):
-        # Case 3. Missing name
+    def test_회원_가입__when__id가_이름이_없는_경우__expected__400_bad_request(self):
         resp = self.register(
             {"email": "email@email.com", "password": "password"},
         )
