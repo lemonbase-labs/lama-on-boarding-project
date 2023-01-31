@@ -66,10 +66,10 @@ class PersonAuthTests(BasePersonUITest):
         self.assertEqual(resp.status_code, status.HTTP_202_ACCEPTED)
 
     def test_로그아웃__when__로그인_안한_상태일_경우__expected__403_forbidden(self):
-        resp = self.logout("/person/logout/")
+        resp = self.logout()
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_로그아웃__when__로그인한_상태일_경우__expected__204_no_content(self):
-        self.logout(email=self.person_email, password=self.person_password)
+        resp = self.logout(email=self.person_email, password=self.person_password)
 
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
