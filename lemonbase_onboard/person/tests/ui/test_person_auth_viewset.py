@@ -61,7 +61,7 @@ class PersonAuthTests(BasePersonUITest):
 
     def test_로그인__when__없는_계정으로_요청한_경우__expected__401_unauthorized(self):
         resp = self.login(
-            "/person/login/", {"email": "email@email.com", "password": "password"}
+            {"email": "email@email.com", "password": "password"}
         )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
 
