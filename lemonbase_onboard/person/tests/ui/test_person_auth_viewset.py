@@ -3,15 +3,12 @@ from typing import Dict
 from rest_framework.test import APIClient, APITestCase
 from rest_framework import status
 
+from person.tests.ui.base_person_ui_test import BasePersonUITest
 from person.application.services.person_auth import PersonAuthAppService
 from person.application.requests.person_register import PersonRegisterRequest
 
 
-class PersonAuthTests(APITestCase):
-    REGISTER_URL = "/person/register/"
-    LOGIN_URL = "/person/login/"
-    LOGOUT_URL = "/person/logout/"
-
+class PersonAuthTests(BasePersonUITest):
     @classmethod
     def setUpTestData(cls):
         cls.person_email = "test1@email.com"
@@ -24,18 +21,6 @@ class PersonAuthTests(APITestCase):
                 email=self.person_email, password=self.person_password, name="name"
             )
         )
-
-    def register(self, request_data: Dict):
-        return self.client.post(REGISTER_URL, request_data)
-
-    def login(self, request_data: Dict):
-        return self.client.post(LOGIN_URL, request_data)
-
-    def logout(self, request_data: Dict, email: str = None, password: str = None):
-        if email and password:
-            self.client.login(email=email, password=password)
-
-        return self.client.post(LOGOUT_URL, request_data)
 
     def test_회원_가입__when__id가_이메일_형식이_아닐_경우__expected__400_bad_request(self):
         resp = self.register({"email": "email", "password": "password", "name": "name"})
