@@ -13,7 +13,11 @@ class BaseReviewUITest(APITestCase):
         return self.client.post(reverse("review_cycle"), request_data, format="json")
 
     def update_review(self, request_path: str, request_data: Dict):
-        return self.client.put(reverse("review_cycle", request_path), request_data, format="json")
+        return self.client.put(
+            reverse("review_cycle", request_path), request_data, format="json"
+        )
 
     def delete_review(self, request_path: str, request_data: Dict):
-        return self.client.delete(reverse("review_cycle", request_path), request_data, format="json")
+        return self.client.delete(
+            reverse("review_cycle", request_path), request_data, format="json"
+        )

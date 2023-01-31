@@ -10,4 +10,4 @@ class RevieweeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reviewee
-        fields = ['entity_id', 'person']
+        fields = ["entity_id", "person"]

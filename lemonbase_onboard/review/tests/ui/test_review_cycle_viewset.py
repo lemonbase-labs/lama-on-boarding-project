@@ -70,7 +70,9 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         )
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_리뷰_사이클_생성__when__reviewee_entity_ids_필드가_없는_경우__expect__400_bad_request(self):
+    def test_리뷰_사이클_생성__when__reviewee_entity_ids_필드가_없는_경우__expect__400_bad_request(
+        self,
+    ):
         self.client.login(email=self.person1.email, password=self.password)
         resp = self.create_review(
             {
@@ -189,7 +191,9 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
 
         self.assertEqual(self.review_cycle.name, modified_name)
         self.assertEqual(self.review_cycle.question.title, modified_question_title)
-        self.assertEqual(self.review_cycle.question.description, modified_question_description)
+        self.assertEqual(
+            self.review_cycle.question.description, modified_question_description
+        )
 
     def test_리뷰_사이클_삭제__when__비로그인시__expect__403_forbidden(self):
         resp = self.delete_review(
