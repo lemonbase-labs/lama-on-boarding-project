@@ -17,23 +17,23 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
 
         cls.person2_id = "test3@email.com"
 
-    def setUp(self) -> None:
-        self.client = APIClient()
-        self.person1 = PersonAuthAppService.register(
+        cls.client = APIClient()
+        cls.person1 = PersonAuthAppService.register(
             PersonRegisterRequest(
-                email=self.person_id,
-                password=self.password,
+                email=cls.person_id,
+                password=cls.password,
                 name="name_1",
             )
         )
-        self.person2 = PersonAuthAppService.register(
+        cls.person2 = PersonAuthAppService.register(
             PersonRegisterRequest(
-                email=self.person2_id,
-                password=self.password,
+                email=cls.person2_id,
+                password=cls.password,
                 name="name_2",
             )
         )
 
+    def setUp(self) -> None:
         self.review_cycle = ReviewCycleAppService.create_review_cycle(
             ReviewCycleCreateRequest(
                 name="cycle name1",
