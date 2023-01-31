@@ -1,22 +1,15 @@
-from typing import Dict
-
-from rest_framework.test import APIClient, APITestCase
-from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from rest_framework.test import APIClient
+from django.contrib.auth.hashers import make_password
 
-from person.domain.models.person import Person
-from review.models import ReviewCycle, Reviewee, Question
+from review.tests.ui.base_review_ui_test import BaseReviewUITest
 from person.application.services.person_auth import PersonAuthAppService
 from review.application.services.review_cycle import ReviewCycleAppService
 from person.application.requests.person_register import PersonRegisterRequest
 from review.application.requests.review_cylce_create import ReviewCycleCreateRequest
 
 
-class ReviewCycleViewsetTests(APITestCase):
-    REVIEW_CREATE_URL = "/review/"
-    REVIEW_UPDATE_URL = "/review/"
-    REVIEW_DELETE_URL = "/review/"
-
+class ReviewCycleViewsetTests(BaseReviewUITest):
     @classmethod
     def setUpTestData(cls):
         cls.person_id = "test2@email.com"
@@ -52,24 +45,6 @@ class ReviewCycleViewsetTests(APITestCase):
                 request_user_id=self.person1.entity_id,
             )
         )
-
-    def create_review(self, request_data: Dict, email: str = None, password: str = None):
-        if email and password:
-            self.client.login(email=email, password=password)
-
-        return self.client.post(self.EVIEW_CREATE_URL, request_data, format="json")
-
-    def update_review(self, request_path: str, request_data: Dict, email: str = None, password: str = None):
-        if email and password:
-            self.client.login(email=email, password=password)
-
-        return self.client.put(f"{self.REVIEW_UPDATE_URL}{request_path}/", request_data, format="json")
-
-    def delete_review(self, request_path: str, request_data: Dict, email: str = None, password: str = None):
-        if email and password:
-            self.client.login(email=email, password=password)
-
-        return self.client.delete(f"{self.REVIEW_DELETE_URL}{request_path}/", request_data, format="json")
 
     def test_리뷰_사이클__when__생성_비로그인시__expect__403_forbidden(self):
         resp = self.create_review(
