@@ -1,7 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APIClient
 from django.contrib.auth.hashers import make_password
 
+from review.domain.models.review_cycle import ReviewCycle
 from review.tests.ui.base_review_ui_test import BaseReviewUITest
 from person.application.services.person_auth import PersonAuthAppService
 from review.application.services.review_cycle import ReviewCycleAppService
@@ -105,19 +105,37 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_리뷰_사이클_생성__when__정상인_경우__expect__201_created(self):
+        review_cycle_name = "review cycle 1"
+        review_cycle_question_title = "question 1"
+        review_Cycle_question_description = "description of question 1"
+
         self.client.login(email=self.person1.email, password=self.password)
         resp = self.create_review(
             {
                 "reviewee_entity_ids": [str(self.person1.entity_id)],
-                "name": "review cycle 1",
+                "name": review_cycle_name,
                 "question": {
-                    "title": "question 1",
-                    "description": "description of question 1",
+                    "title": review_cycle_question_title,
+                    "description": review_Cycle_question_description,
                 },
             },
         )
 
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        created_review_cycle_entity_id = resp.data["entity_id"]
+        review_cycle: ReviewCycle = ReviewCycle.objects.get(
+            entity_id=created_review_cycle_entity_id
+        )
+        self.assertEqual(review_cycle.name, review_cycle_name)
+        self.assertEqual(review_cycle.question.title, review_cycle_question_title)
+        self.assertEqual(
+            review_cycle.question.description, review_Cycle_question_description
+        )
+        self.assertListEqual(
+            [str(reviewee.entity_id) for reviewee in review_cycle.reviewees],
+            [str(self.person1.entity_id)],
+        )
 
     def test_리뷰_사이클_업데이트__when__비로그인시__expect__403_forbidden(self):
         resp = self.update_review(
