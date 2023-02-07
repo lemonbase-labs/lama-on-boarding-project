@@ -16,7 +16,7 @@ class PersonAuthTests(BasePersonUITest):
 
     def setUp(self) -> None:
         self.client = APIClient()
-        PersonAuthAppService.register(
+        self.person = PersonAuthAppService.register(
             PersonRegisterRequest(
                 email=self.person_email, password=self.person_password, name="name"
             )
@@ -79,7 +79,7 @@ class PersonAuthTests(BasePersonUITest):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_로그아웃__when__로그인한_상태일_경우__expected__204_no_content(self):
-        self.client.login(email=self.person_email, password=self.person_password)
+        self.client.force_authenticate(email=self.person)
         resp = self.logout()
 
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
