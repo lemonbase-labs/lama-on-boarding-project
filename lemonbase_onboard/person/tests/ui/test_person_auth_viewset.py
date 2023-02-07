@@ -41,19 +41,15 @@ class PersonAuthTests(BasePersonUITest):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_회원_가입__when__정상적으로_회원_가입이_됬을_경우__expected__201_created(self):
-        # Given
         expect_user_email = "email@email.com"
         expect_user_name = "name"
         expect_user_password = "password"
 
-        # When
         resp = self.register(
             {"email": expect_user_email, "password": expect_user_name, "name": expect_user_password},
         )
 
-        # Then
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-
         person = Person.objects.get(email=expect_user_email)
         self.assertEqual(person.email, expect_user_email)
         self.assertEqual(person.name, expect_user_name)
