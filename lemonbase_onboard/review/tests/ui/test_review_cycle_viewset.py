@@ -12,20 +12,20 @@ from review.application.requests.review_cylce_create import ReviewCycleCreateReq
 class ReviewCycleViewsetTests(BaseReviewUITest):
     @classmethod
     def setUpTestData(cls):
-        cls.person_id = "test2@email.com"
-        cls.person2_id = "test3@email.com"
+        cls.person_email = "test2@email.com"
+        cls.person2_email = "test3@email.com"
         cls.password = make_password("password")
 
         cls.person1 = PersonAuthAppService.register(
             PersonRegisterRequest(
-                email=cls.person_id,
+                email=cls.person_email,
                 password=cls.password,
                 name="name_1",
             )
         )
         cls.person2 = PersonAuthAppService.register(
             PersonRegisterRequest(
-                email=cls.person2_id,
+                email=cls.person2_email,
                 password=cls.password,
                 name="name_2",
             )
