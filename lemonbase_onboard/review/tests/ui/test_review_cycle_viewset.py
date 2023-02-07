@@ -14,19 +14,18 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
     def setUpTestData(cls):
         cls.person_email = "test2@email.com"
         cls.person2_email = "test3@email.com"
-        cls.password = make_password("password")
 
         cls.person1 = PersonAuthAppService.register(
             PersonRegisterRequest(
                 email=cls.person_email,
-                password=cls.password,
+                password=make_password("password"),
                 name="name_1",
             )
         )
         cls.person2 = PersonAuthAppService.register(
             PersonRegisterRequest(
                 email=cls.person2_email,
-                password=cls.password,
+                password=make_password("password"),
                 name="name_2",
             )
         )
@@ -58,7 +57,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_리뷰_사이클_생성__when__name_필드가_없는_경우__expect__400_bad_request(self):
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.create_review(
             {
                 "reviewee_entity_ids": [str(self.person1.entity_id)],
@@ -73,7 +72,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
     def test_리뷰_사이클_생성__when__reviewee_entity_ids_필드가_없는_경우__expect__400_bad_request(
         self,
     ):
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.create_review(
             {
                 "name": "review cycle 1",
@@ -86,7 +85,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_리뷰_사이클_생성__when__question_필드가_없는_경우__expect__400_bad_request(self):
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.create_review(
             {
                 "name": "review cycle 1",
@@ -96,7 +95,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_리뷰_사이클_생성__when__question_title_필드가_없는_경우__expect__400_bad_request(self):
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.create_review(
             {
                 "name": "review cycle 1",
@@ -111,7 +110,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         review_cycle_question_title = "question 1"
         review_Cycle_question_description = "description of question 1"
 
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.create_review(
             {
                 "reviewee_entity_ids": [str(self.person1.entity_id)],
@@ -154,7 +153,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_리뷰_사이클_업데이트__when__생성자가_아닌_경우__expect__403_forbidden(self):
-        self.client.login(email=self.person2.email, password=self.password)
+        self.client.force_authenticate(user=self.person2)
         resp = self.update_review(
             self.review_cycle.entity_id,
             {
@@ -173,7 +172,7 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         modified_question_title = "modified question title"
         modified_question_description = "modified question description"
 
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.update_review(
             self.review_cycle.entity_id,
             {
@@ -202,14 +201,14 @@ class ReviewCycleViewsetTests(BaseReviewUITest):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_리뷰_사이클_삭제__when__생성자가_아닌_경우__expect__403_forbidden(self):
-        self.client.login(email=self.person2.email, password=self.password)
+        self.client.force_authenticate(user=self.person2)
         resp = self.delete_review(
             self.review_cycle.entity_id,
         )
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_리뷰_사이클_삭제__when__정상인_경우__expect__204_no_content(self):
-        self.client.login(email=self.person1.email, password=self.password)
+        self.client.force_authenticate(user=self.person1)
         resp = self.delete_review(
             self.review_cycle.entity_id,
         )
