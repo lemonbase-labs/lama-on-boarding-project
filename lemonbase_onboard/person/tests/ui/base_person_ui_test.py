@@ -16,7 +16,4 @@ class BasePersonUITest(APITestCase):
         return self.client.post(self.LOGIN_URL, request_data)
 
     def logout(self, request_data: Dict, email: str = None, password: str = None):
-        if email and password:
-            self.client.login(email=email, password=password)
-
         return self.client.post(self.LOGOUT_URL, request_data)
