@@ -12,7 +12,9 @@ from person.domain.models.person import Person
 
 class PersonAuthAppService:
     @classmethod
-    def register(cls, person_register_request: PersonRegisterRequest) -> BasicPersonSerializer:
+    def register(
+        cls, person_register_request: PersonRegisterRequest
+    ) -> BasicPersonSerializer:
         person_register_command = PersonRegisterCommand(
             email=person_register_request.email,
             password=person_register_request.password,
